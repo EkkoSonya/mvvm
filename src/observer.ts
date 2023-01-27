@@ -1,3 +1,4 @@
+import Dep from './dep'
 class Observer {
     public data:any;
     constructor(data:any){
@@ -7,7 +8,6 @@ class Observer {
 
     walk(data:any){
         var that = this;
-        // console.log(that)
         Object.keys(data).forEach(function(key) {
                 that.convert(key, data[key]);
         })
@@ -20,23 +20,25 @@ class Observer {
     defineReactive(data:any, key:any, val:any) {
         var dep = new Dep();
         var childObj = observe(val);
-        // console.log(data)
         Object.defineProperty(data, key, {
             enumerable: true,
             configurable: false,
             get: function() {
+                // 访问该 key 时如果 Dep.target 指向 Watcher 实例，把该 key 对应的 Dep 实例传递给 Watcher 实例
+  				// 也可以直接 dep.addSub(Dep.target)
                 if (Dep.target) {
                     dep.depend();
                 }
                 return val;
             },
             set: function(newVal) {
-                // console.log(newVal, val, 22)
                 if (newVal === val) {
                     return;
                 }
                 val = newVal;
+                // 新的值是object的话，进行监听
                 childObj = observe(newVal);
+                // 通知订阅该 key 的 Watcher 实例
                 dep.notify();
             }
         })
@@ -51,39 +53,4 @@ function observe(value:any, vm?:any) {
     return new Observer(value);
 }
 
-class Dep {
-    static uid:number = 0;
-    public id:number;
-    public subs = new Array();
-    static target:any = null;
-
-    constructor() {
-        this.subs = [];
-        this.id = Dep.uid++;
-    }
-
-    addSub(sub:any) {
-        this.subs.push(sub);
-    };
-
-    depend() {
-        Dep.target.addDep(this);
-    };
-
-    removeSub(sub:any) {
-        var index = this.subs.indexOf(sub);
-        if (index != -1) {
-            this.subs.splice(index, 1);
-        }
-    };
-
-    notify(){
-        // console.log(111)
-        this.subs.forEach(function(sub){
-            // console.log(sub)
-            sub.update()
-        })
-    }
-}
-
-export {Observer, Dep, observe};
+export {observe};

@@ -1,4 +1,4 @@
-import {Dep} from './observer'
+import Dep from './dep'
 
 // Watcher的目的是给需要变化的元素增加一个监视，当数据变化后执行对应的方法
 export default class Watcher {
@@ -38,18 +38,19 @@ export default class Watcher {
         }
     };
 
-    addDep(dep:any) {
-        // console.log(this.depIds,111)
+    addDep(dep:Dep) {
         if (!this.depIds.hasOwnProperty(dep.id)) {
             dep.addSub(this);
             this.depIds[dep.id] = dep;
         }
     };
 
+    // 获取 Wacher 实例监视的值
     get() {
+        // 访问监听的属性时把 Dep.target 指向自身，从而在 Observer 中把当前实例添加到属性订阅者中
         Dep.target = this;
         var value = this.getter.call(this.vm, this.vm);
-        // console.log(this.getter())
+        // 获取属性值后置空 Dep.target
         Dep.target = null;
         return value;
     };
@@ -60,12 +61,10 @@ export default class Watcher {
         var exps = exp.split('.');
 
         return function(obj:any) {
-            // console.log(exp)
             for (let i = 0, len = exps.length; i < len;i++){
                 if(!obj) return;
                 obj = obj[exps[i]];
             }
-            // console.log(obj)
             return obj;
         }
     } 

@@ -1,7 +1,7 @@
 import MVVM from './mvvm'
 
 var vm = new MVVM({
-    el: '#mvvm-app',
+    el: '#app',
     data: {
         someStr: 'hello ',
         className: 'btn',
