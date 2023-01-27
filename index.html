@@ -4,19 +4,61 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>webpack5</title>
+    <title>MVVM</title>
   </head>
   <body>
-    <div id="mvvm-app">
-      <input type="text" v-model="someStr">
-      <input type="text" v-model="child.someStr">
-      <!-- <p v-class="className" class="abc">
-          {{someStr}}
-          <span v-text="child.someStr"></span>
-      </p> -->
-      <p>{{ getHelloWord }}</p>
-      <p v-html="htmlStr"></p>
+    <div class="tit">
+      <h1>MVVM实例</h1>
+    </div>
+    <div id="app">
+      <div class="input1">
+        input1: 
+        <input type="text" v-model="someStr">
+      </div>
+      <div class="input2">
+        input2: 
+        <input type="text" v-model="child.someStr">
+      </div>
+      <div class="info">
+        <p>input1 + input2:</p>
+        <p>{{ getHelloWord }}</p>
+      </div>
+      <div class="html">
+        v-html:<p v-html="htmlStr"></p>
+      </div>
+      
       <button v-on:click="clickBtn">change model</button>
-  </div>
+    </div>
   </body>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tit{
+      text-align: center;
+    }
+    
+    #app {
+      flex:1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      grid-gap: 2rem;
+    }
+
+    .info, .html{
+      display: flex;
+      grid-gap: 0.5rem;
+    }
+  </style>
 </html>
